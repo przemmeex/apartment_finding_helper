@@ -9,7 +9,7 @@ import matplotlib.patheffects as path_effects
 import matplotlib.pyplot as plt
 import requests
 
-#CITY = "wroclaw"
+# CITY = "wroclaw"
 CITY = "gdansk"
 DEBUG_MODE = True
 SHOW_LABELS = True
@@ -32,7 +32,11 @@ location_rate_w = {"dolnośląskie": 5, "grabiszynek": 75, "krzyki": 70, "śród
                    "rynek": 100, "kuźniki": 55, "leśnica": 20, "kozanów": 70, "różanka": 60}
 
 location_rate_g = {"śródmieście": 100, "wrzeszcz": 100, "oliwa": 85, "przymorze": 90,
-                   "stare miasto": 100, "chełm": 55}
+                   "stare miasto": 100, "chełm": 55, "brętowo": 65, "ujeścisko": 45, "brzeźno": 80,
+                   "osowa": 85, "morena": 80, "stogi": 40, "sobieszowo": 30, "pomorskie": 10,
+                   "matemblewo": 55, "jasień": 45, "aniołki": 75, "niedżwiednik": 50,
+                   "łostowice": 35, "zaspa": 70, "nowy port": 40, "jelitkowo": 85, "żabianka": 70,
+                   "karczemki kiełpińskie": 30}
 
 location_mapper = {"wroclaw": location_rate_w, "gdansk": location_rate_g}
 name_to_utf = {"gdansk": "Gdańsk", "wroclaw": "Wrocław"}
@@ -59,7 +63,8 @@ def prepare_data():
                                         div.find("li", {"class": "offer-item-price"}).getText())
 
                 location_match = re.search(location_pattern,
-                                           div.find("p", {"class": "text-nowrap hidden-xs"}).getText(),
+                                           div.find("p",
+                                                    {"class": "text-nowrap hidden-xs"}).getText(),
                                            re.IGNORECASE)
                 raw_area = div.find("li", {"class": "hidden-xs offer-item-area"}).getText()
 
@@ -74,7 +79,7 @@ def prepare_data():
                     else:
                         areas.append(int(float(area_range[0])))
                     price_int = int("".join(price_match.group(0)[:-3].split()))
-                    prices.append(price_int) if price_int < 750000 else prices.append(750000)
+                    prices.append(price_int) if price_int < 750000 else prices.append(700000)
                     links.append(link_url)
     else:
         with open(OFFLINE_DATA) as data_file:
