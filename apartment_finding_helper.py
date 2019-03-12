@@ -9,7 +9,8 @@ import matplotlib.patheffects as path_effects
 import matplotlib.pyplot as plt
 import requests
 
-CITY = "wroclaw"
+#CITY = "wroclaw"
+CITY = "gdansk"
 DEBUG_MODE = True
 SHOW_LABELS = True
 SAVE_DATA = True
@@ -30,19 +31,26 @@ location_rate_w = {"dolnośląskie": 5, "grabiszynek": 75, "krzyki": 70, "śród
                    "ołtaszyn": 55, "huby": 85, "muchobór wielki": 65, "zakrzów": 10, "wojszyce": 45,
                    "rynek": 100, "kuźniki": 55, "leśnica": 20, "kozanów": 70, "różanka": 60}
 
+location_rate_g = {"śródmieście": 100, "wrzeszcz": 100, "oliwa": 85, "przymorze": 90,
+                   "stare miasto": 100, "chełm": 55}
+
+location_mapper = {"wroclaw": location_rate_w, "gdansk": location_rate_g}
+name_to_utf = {"gdansk": "Gdańsk", "wroclaw": "Wrocław"}
+location_rate = location_mapper[CITY]
+
 main_url = "https://www.otodom.pl/sprzedaz/mieszkanie/{}/".format(CITY)
 
 
 def prepare_data():
     if not OFFLINE_DATA:
         prices, locations, areas, links = [], [], [], []
-        for i in range(1, 10):
+        for i in range(1, 2):
             handler = requests.get(main_url, params={"page": str(i)})
             soup = bs4.BeautifulSoup(handler.text, 'lxml')
-            # print(soup)
             divs = soup.find_all("div", {"class": "offer-item-details"})
             price_re_pattern = r"(\d{1} )?\d{2,3} \d{3} zł"
-            location_pattern = r"(Wrocław, )(.*)"
+            location_pattern = "({}, )(.*)".format(name_to_utf[CITY])
+
             area_pattern = r"\d{2,3}\.\d{1,2}|\d{2,3}"
 
             for div in divs:
@@ -58,7 +66,7 @@ def prepare_data():
                 area_range = re.findall(area_pattern, raw_area.replace(",", "."))
 
                 if location_match and price_match and area_range:
-                    locations.append(location_rate_w.get(location_match.group(2).lower(), 1))
+                    locations.append(location_rate.get(location_match.group(2).lower(), 1))
                     if locations[-1] == 1:
                         print(location_match.group(2))
                     if len(area_range) == 2:
