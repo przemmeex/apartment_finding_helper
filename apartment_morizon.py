@@ -10,8 +10,12 @@ main_url = "https://www.morizon.pl/mieszkania/{}/".format(CITY)
 
 
 def mor_prepare_data():
+    """Collect data from morizon website and pass is for further tasks
+
+    :return:
+    """
     prices, locations, areas, links = [], [], [], []
-    for i in range(1, SEARCHING_DEPTH):
+    for i in range(START_PAGE, SEARCHING_DEPTH+1):
         handler = requests.get(main_url, params={"page": str(i)})
         soup = bs4.BeautifulSoup(handler.text, 'lxml')
         heads = soup.find_all("header")

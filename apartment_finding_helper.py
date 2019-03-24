@@ -15,34 +15,47 @@ location_rate = location_mapper[CITY]
 main_url = "https://www.otodom.pl/sprzedaz/mieszkanie/{}/".format(CITY)
 
 
-def del_duplicates_and_merge(lists_A, lists_B):
+def del_duplicates_and_merge(lists_a, lists_b):
+    """From pair of a 3 element list collections remove duplicates
+    and return unike values
+
+    :param lists_a:
+    :type lists_a:
+    :param lists_b:
+    :type lists_b:
+    :return:
+    """
     v, x, y, z = [], [], [], []
-    for i in range(len(lists_A[0])):
+    for i in range(len(lists_a[0])):
         dup = False
-        for j in range(len(lists_B[0])):
-            if (lists_A[0][i] == lists_B[0][j] and lists_A[1][i] == lists_B[1][j] and
-                    lists_A[2][i] == lists_B[2][j]):
+        for j in range(len(lists_b[0])):
+            if (lists_a[0][i] == lists_b[0][j] and lists_a[1][i] == lists_b[1][j] and
+                    lists_a[2][i] == lists_b[2][j]):
                 dup = True
         if not dup:
-            v.append(lists_A[0][i])
-            x.append(lists_A[1][i])
-            y.append(lists_A[2][i])
-            z.append(lists_A[3][i])
+            v.append(lists_a[0][i])
+            x.append(lists_a[1][i])
+            y.append(lists_a[2][i])
+            z.append(lists_a[3][i])
         elif DEBUG_MODE:
             print("Duplicated result: {}".format(
-                (lists_A[0][i], lists_A[1][i], lists_A[2][i], lists_A[3][i])))
+                (lists_a[0][i], lists_a[1][i], lists_a[2][i], lists_a[3][i])))
 
-    v += lists_B[0]
-    x += lists_B[1]
-    y += lists_B[2]
-    z += lists_B[3]
+    v += lists_b[0]
+    x += lists_b[1]
+    y += lists_b[2]
+    z += lists_b[3]
     return v, x, y, z
 
 
 def prepare_data():
+    """Main executor
+
+    :return:
+    """
     if not OFFLINE_DATA:
         prices, locations, areas, links = [], [], [], []
-        for i in range(1, SEARCHING_DEPTH):
+        for i in range(START_PAGE, SEARCHING_DEPTH+1):
             handler = requests.get(main_url, params={"page": str(i)})
             soup = bs4.BeautifulSoup(handler.text, 'lxml')
             divs = soup.find_all("div", {"class": "offer-item-details"})
@@ -103,6 +116,16 @@ def prepare_data():
 
 
 def plot_chart(areas, locations, prices):
+    """Plot 3D chart based on data
+
+    :param areas:
+    :type areas:
+    :param locations:
+    :type areas:
+    :param prices:
+    :type areas:
+    :return:
+    """
     fig = plt.figure()
     ax = fig.gca(projection='3d')
     # ax.scatter(areas, locations, prices, c=prices, cmap='viridis', linewidth=0.5)

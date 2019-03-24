@@ -9,7 +9,8 @@ SAVE_DATA = True
 SEARCH_MOR = True
 PRICE_UPPER_LIMIT = 750000
 AREA_UPPER_LIMIT = 120
-SEARCHING_DEPTH = 4
+START_PAGE = 1
+SEARCHING_DEPTH = 1
 OFFLINE_DATA = ""
 SAVE_NAME = "apartments_data_{}_{}.json".format(datetime.now().timetuple().tm_yday,
                                                 datetime.now().strftime("%H_%M"))
@@ -25,8 +26,8 @@ location_rate_w = {"dolnośląskie": 5, "grabiszynek": 75, "krzyki": 70, "śród
                    "stabłowice": 45, "żerniki": 45, "szczepin": 90, "biskupin": 85, "brochów": 30,
                    "swojczyce": 40, "kowale": 40, "plac grunwaldzki": 95, "sołtysowice": 35,
                    "ołtaszyn": 55, "huby": 85, "muchobór wielki": 65, "zakrzów": 10, "wojszyce": 45,
-                   "rynek": 100, "kuźniki": 55, "leśnica": 20, "kozanów": 70, "różanka": 60,
-                   "południe": 15, "nadodrze": 80, "os. psie pole": 35}
+                   "rynek": 100, "kuźniki": 55, "leśnica": 25, "kozanów": 70, "różanka": 60,
+                   "południe": 15, "nadodrze": 80, "os. psie pole": 35, "polanowice": 20}
 
 location_rate_g = {"śródmieście": 100, "wrzeszcz": 100, "oliwa": 85, "przymorze": 90,
                    "stare miasto": 100, "chełm": 55, "brętowo": 65, "ujeścisko": 45, "brzeźno": 80,
