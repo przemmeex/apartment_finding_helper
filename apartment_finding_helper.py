@@ -4,6 +4,7 @@ import re
 from mpl_toolkits.mplot3d import Axes3D
 from const import *
 from apartment_morizon import mor_prepare_data
+from math import sqrt
 
 import bs4
 import matplotlib.patheffects as path_effects
@@ -48,6 +49,17 @@ def del_duplicates_and_merge(lists_a, lists_b):
     return v, x, y, z
 
 
+def calc_distance_from_optimum(areas, locations, prices):
+    price_normalizing_factor = 2000
+    distances_list = []
+    for k in range(len(areas)):
+        one_distance = sqrt(
+            (prices[k] / price_normalizing_factor) ** 2 + (100 - locations[k]) ** 2 +
+            (AREA_UPPER_LIMIT - areas[k]) ** 2)
+        distances_list.append(int(one_distance))
+    return distances_list
+
+
 def prepare_data():
     """Main executor
 
@@ -79,7 +91,7 @@ def prepare_data():
 
                 if location_match and price_match and area_range:
                     locations.append(location_rate.get(location_match.group(2).lower(), 1))
-                    if locations[-1] == 1:
+                    if locations[-1] == 1 and DEBUG_MODE:
                         print(location_match.group(2))
                     if len(area_range) == 2:
                         areas.append(int((float(area_range[0]) + float(area_range[1])) / 2))
@@ -108,10 +120,17 @@ def prepare_data():
                       file_handler, ensure_ascii=False)
     if DEBUG_MODE:
         print(len(prices))
-        print(prices, locations, areas, links)
+        # print(prices, locations, areas, links)
 
+    distances = calc_distance_from_optimum(areas, locations, prices)
+    tripple_touple = []
     for i, lnk in enumerate(links, 1):
-        print(i, lnk)
+        print(i, lnk, distances[i-1])
+        tripple_touple.append((i, lnk, distances[i-1]))
+    print("\n\n")
+    tripple_touple.sort(reverse=True, key=lambda x: x[2])
+    for i in tripple_touple:
+        print(i)
     return areas, locations, prices
 
 
